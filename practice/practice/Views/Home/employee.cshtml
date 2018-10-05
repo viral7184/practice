@@ -1,0 +1,297 @@
+﻿
+@{
+    ViewBag.Title = "employee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+<link href="~/css/select2.min.css" rel="stylesheet" />
+
+@*<div class="modal fade" id="modal-default2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Default Modal</h4>
+            </div>
+          
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>*@
+
+
+
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Employee</h4>
+            </div>
+            <form role="form" method="post" id="myform"  enctype="multipart/form-data">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Name</label>
+                        <input type="text" name="NAME" class="form-control" id="name" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                            <input type="email" name="EMAIL" id="email" class="form-control" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="PASSWORD" name="PASSWORD" class="form-control" id="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Number</label>
+                        <input type="NUMBER" name="NUMBER" class="form-control" id="number" placeholder="Enter number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Gender</label>     <br />
+                        <input type="radio" name="GENDER" id="male" value="Male" checked>Male
+                        <input type="radio" name="GENDER" id="female" value="Female">Female
+                    </div>
+
+                    <div class="form-group">
+                        <label>BirthDate:</label>
+
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" name="BIRTHDATE"   class="form-control pull-right" autocomplete="off" id="datepicker">
+                        </div>
+                        <!-- /.input group -->
+                    </div>
+
+                    <div class="form-group" >
+                        <label for="exampleInputFile">File input</label>
+                        <input type="file" name="IMAGE" >
+                       <img id="image"   Height="100" Width="100"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>City</label>
+                        <select class="form-control select2 id_100" multiple="multiple" name="CITY" id="city" style="width: 100%;">
+                            <option>Alabama</option>
+                            <option>Alaska</option>
+                            <option>California</option>
+                            <option>Delaware</option>
+                            <option>Tennessee</option>
+                            <option>Texas</option>
+                            <option>Washington</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Hobby</label>
+                        <div class="checkbox row-form" id="hobby">
+                            <label>
+                                <input type="checkbox" value="Cricket" name="HOBBY">
+                                Cricket
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Chess" name="HOBBY">
+                                Chess
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Music" name="HOBBY">
+                                Music
+                            </label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="modal-footer">
+                        @*<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>*@
+                        <input type="hidden" id="hide" name="ID" />
+                        <input type="submit" value="Add Employee" id="add" class="btn btn-success ">
+                        <input type="submit" value="Update Employee" id="update"  class="btn btn-success hidden">
+                       
+                     </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="box-body">
+    <input type="button" value="Add Employee" onclick="openmodal()" class="btn btn-primary pull-right"  data-toggle="modal" data-target="#modal-default">
+           
+</div>
+
+
+
+<!-- /.box-header -->
+<div class="box-body">
+    <table id="example1" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Sr no</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Number</th>
+                <th>Password</th>
+                <th>Gender</th>
+                <th>Birthdate</th>
+                <th>Image</th>
+                <th>City</th>
+                <th>Hobby</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+      
+        <tbody>
+@{int i = 1;}
+@foreach (var item in ViewBag.employee)
+{
+            <tr id="row_@item.ID">
+                <td>@i</td>
+                <td>@item.NAME</td>
+                <td>@item.EMAIL</td>
+                <td>@item.NUMBER</td>
+                <td>@item.PASSWORD</td>
+                <td>@item.GENDER</td>
+                <td>
+                    @if (item.BIRTHDATE != null)
+                    {
+                        @item.BIRTHDATE.ToShortDateString()
+                    }
+                </td>
+                <td><img src="~/img/@item.IMAGE" width="30"/> </td>
+                <td>@item.CITY</td>
+                <td>@item.HOBBY</td>
+                <td>
+                    <a href="" onclick="opendialog(@item.ID)" data-toggle="modal"  data-target="#modal-default" >Update</a>
+                    <a href="" onclick="openDialog2(@item.ID,'del')" data-toggle="modal" data-target="#modal-default2">Delete</a>
+                    @*<a   data-toggle="modal" data-target="#modal-default">edit</a>*@
+                </td>
+            </tr>
+    i++;
+}
+           </tbody>
+          
+       
+        </table>
+    </div>
+
+ <script src="~/jquery/bootstrap-datepicker.min.js"></script>
+<script src="~/jquery/select2.full.min.js"></script>
+<script>
+    $('#datepicker').datepicker({
+        autoclose: true,
+        format: 'dd/mm/yyyy'
+    });
+    $('.select2').select2()
+   // $('#datepicker').datepicker({ dateFormat: 'dd/mm/yy' }).val();
+</script>
+   
+<script>
+  $(function () {
+    $('#example1').DataTable()
+   
+  })
+</script>
+<script>
+    function openmodal()
+    {
+        document.getElementById("myform").reset();
+        $('#hide').val(0);
+        $('#add').removeClass('hidden');
+        $('#update').addClass('hidden');
+    }
+
+  
+</script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+<script>
+
+
+
+    function opendialog(id)
+    {
+        $('input:checkbox').removeAttr('checked');
+        $("#add").addClass('hidden');
+        $("#update").removeClass('hidden');
+        $.ajax({
+            url: '/Home/getemployee/' + id,
+            dataType: 'json',
+            type: 'POST',
+            success: function (data) {
+                $('#hide').val(data.ID);
+                $('#name').val(data.NAME);
+                $('#email').val(data.EMAIL);
+                $('#password').val(data.PASSWORD);
+                $('#number').val(data.NUMBER);
+
+                // $('#image').append(data.IMAGE);
+                var img = data.IMAGE;
+                // $('#image').append('<img  src=~/img/' + img + " width='30px'/>");
+                var path = "/img/" + img;
+                $('#image').attr('src', path);
+
+             //   $('#gender').val(data.GENDER);
+                //    $('#datepicker').val(data.BIRTHDATE);
+                var date = data.BIRTHDATE;
+                var str = moment(date).format("DD/MM/YYYY");
+                $('#datepicker').val(str);
+
+                var value = data.GENDER;
+                $("input[name=GENDER][value=" + value + "]").prop('checked', true);
+                var value2 = data.CITY;
+               // $('#city option[value=' + value2 + ']').prop("selected", "selected").change();;
+                $("#city").val(value2).change();
+
+              //  $('#hobby').val(data.HOBBY);
+                var check = data.HOBBY;
+                var array=check.split(',');
+             
+                //       var spl = check.Split(',');
+                for(i=0; i < array.length; i++)
+                    {
+                   $("input[name=HOBBY][value=" + array[i] + "]").attr('checked', true);
+                }
+            }
+        });
+    }
+</script>
+<script>
+    function openDialog2(id,del)
+    {
+        if(confirm("Are you sure to delete Record?"))
+        {
+            var deletes=
+            {
+                ID:id,
+                emp_del:del
+            }
+            {
+                $.ajax({
+                    url: '/Home/delete/',
+                    data: JSON.stringify(deletes),
+                    type: 'post',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function () {
+                        $('#row_' + id).hide();
+                    }
+                })
+            }
+        }
+    }
+</script>
